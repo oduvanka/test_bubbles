@@ -2,7 +2,7 @@
 	min-width: 1200px;
 	margin: 0;
 	padding: 0;
-	font-size: 10px;
+	font-size: 8px;
     line-height: 20px;
     font-family: "Arial", sans-serif;
     color: #333333;
@@ -12,15 +12,25 @@
 .container {
 	display: flex;
 	margin: 0 auto;
-	justify-content: flex-start;
+	padding-top: 100px;
+	min-width: 100px;
+	justify-content: space-between;
+	align-items: flex-end;
 }
 
 .bubble {
-	width: 50px;
-	height: 50px;
+	min-width: 10px;
+	min-height: 10px;
 	margin: 5px;
 	border: 1px solid black;
 	border-radius: 30px;
 	text-align: center;
-	line-height: 50px;
+}
+
+.bubbleInFocus {
+	background-color: yellow;
+}
+
+.bubbleFalse {
+	background-color: red;
 }
