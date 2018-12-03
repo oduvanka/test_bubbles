@@ -18,6 +18,12 @@
 	align-items: flex-end;
 }
 
+.magicWand {
+	width: 100px;
+	height: 100px;
+	background-color: green;
+}
+
 .bubble {
 	min-width: 10px;
 	min-height: 10px;
@@ -33,4 +39,33 @@
 
 .bubbleFalse {
 	background-color: red;
+}
+
+.bubbleDisable {
+	background-color: silver;
+}
+
+/*Анимация*/
+
+@keyframes moveTopLeft{
+	50% {
+		transform: translate(-50px, -50px);
+	}
+	100% {
+		transform: translate(-100px, 0px);
+	}
+}
+
+@keyframes moveBottomRight {
+	50% {
+		transform: translate(50px, 50px);
+	}
+	100% {
+		transform: translate(100px, 0px);
+	}
+}
+
+.moveBubbleToLeft {
+	animation-name: moveTopLeft;
+	animation-duration: 5s;
 }

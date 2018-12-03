@@ -41,19 +41,23 @@ function createBubbles () {
 		newBubble.textContent = arrD[i];
 		container.appendChild(newBubble);
 	}
-	
-	setTimeout("sortBubbles()", 3000);
 }
 
 function sortBubbles () {
-	for (var i = 0; i < countBubbles-1; i++) {
-		var f = 0;
-		for (var j = 0; j < countBubbles-1-i; j++) {
+	var i = 0;
+	var resultSortI = setTimeout(function sortI (i) 
+	{
+		var flagWasSwap = false;
+		var j = 0;
+		var resultSortJ = setTimeout(function sortJ (j) 
+		{
 			var bubbles = document.querySelectorAll('.bubble');
+			var bubbleLeft = bubbles[j];
+			var bubbleRight = bubbles[j+1];
 			
 			//Выделяем сравниваемые шары
-			bubbles[j].classList.add('bubbleInFocus');
-			bubbles[j+1].classList.add('bubbleInFocus');
+			bubbleLeft.classList.add('bubbleInFocus');
+			bubbleRight.classList.add('bubbleInFocus');
 			
 			if (arrD[j] > arrD[j+1]) {
 				//Меняем местами диаметры
@@ -61,24 +65,58 @@ function sortBubbles () {
 				arrD[j] = arrD[j+1];
 				arrD[j+1] = tempD;
 				
-				bubbles[j].classList.add('bubbleFalse');
-				bubbles[j+1].classList.add('bubbleFalse');
-				//Меняем местами шары
-				container.removeChild(bubbles[j+1]);
-				var newPositionBubble = container.insertBefore(bubbles[j+1], bubbles[j]);
+				setTimeout(function() 
+				{
+					bubbleLeft.classList.add('bubbleFalse');
+					bubbleRight.classList.add('bubbleFalse');
+				}, 500);
 				
-				f = 1;
+				setTimeout(function() 
+				{
+					//Меняем местами шары
+					//bubbleRight.classList.add('moveBubbleToLeft');
+					//bubbleLeft.classList.add('moveBottomRight');
+					container.removeChild(bubbleRight);
+					container.insertBefore(bubbleRight, bubbleLeft);
+				}, 1000);
+				
+				flagWasSwap = true;
 			}
-			bubbles[j].classList.remove('bubbleInFocus');
-			bubbles[j].classList.remove('bubbleFalse');
-			bubbles[j+1].classList.remove('bubbleInFocus');
-			bubbles[j+1].classList.remove('bubbleFalse');
-		}
-
-		if (f === 0) {
+			
+			setTimeout(function() 
+			{
+				bubbleLeft.classList.remove('bubbleInFocus');
+				bubbleLeft.classList.remove('bubbleFalse');
+				//bubbleLeft.classList.remove('moveBottomRight');
+				
+				bubbleRight.classList.remove('bubbleInFocus');
+				bubbleRight.classList.remove('bubbleFalse');
+				//bubbleRight.classList.remove('moveBubbleToLeft');
+			}, 2000);
+			
+			j++;
+			if (j === countBubbles-i) {
+				//clearTimeout(sortJ);
+				return;
+			}
+			setTimeout(sortJ, 2000, j);
+		}, 1000, 0)
+		if (!flagWasSwap) {
 			//Не было ни одного обмена за проход
 			//Досрочно выходим из сортировки
-			break;
+			clearTimeout(sortI);
 		}
-	}
+		i++;
+		if (i === countBubbles) return;
+		setTimeout(sortI, 2000*countBubbles, i);
+	}, 1000, 0)
+//}
 }
+
+
+
+
+
+
+
+
