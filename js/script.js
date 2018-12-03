@@ -1,8 +1,4 @@
-var
-	container = document.querySelector('.container'),
-	contentWeight = container.clientWidth - 50,
-	minD = 20,
-	maxD = Math.floor(contentWeight / 10),
+var	container = document.querySelector('.container'),
 	countBubbles = 0,
 	arrD = [];
 
@@ -14,11 +10,14 @@ function getRandomInt(min, max) {
 }
 	
 function createBubbles () {
-	//Создаём массив диаметров шаров
+	var contentWeight = container.clientWidth - 50,
+		minD = 20,
+		maxD = Math.floor(contentWeight / 10),
+		sumD = 0,
+		newD = 0,
+		i = 0;
 	
-	var i = 0;
-	var sumD = 0;
-	var newD = 0;
+	//Создаём массив диаметров шаров
 	while (sumD < contentWeight) {
 		newD = getRandomInt(minD, maxD);
 		sumD += newD;
@@ -36,25 +35,24 @@ function createBubbles () {
 		newBubble.classList.add('bubble');
 		
 		/*Цвет шара*/
+		var colorBubble = 'bubbleYellow';
 		if (i%4 === 0) {
-			newBubble.classList.add('bubbleRed');
+			colorBubble = 'bubbleRed';
 		}
 		else if (i%3 === 0) {
-			newBubble.classList.add('bubbleBlue');
+			colorBubble = 'bubbleBlue';
 		}
 		else if (i%2 === 0) {
-			newBubble.classList.add('bubbleYellow');
+			colorBubble = 'bubbleGreen';
 		}
-		else {
-			newBubble.classList.add('bubbleGreen');
-		}
+		newBubble.classList.add(colorBubble);
 		
 		var bublleOptions = arrD[i] + 'px';
 		newBubble.style.width = bublleOptions;
 		newBubble.style.height = bublleOptions;
 		newBubble.style.borderRadius = bublleOptions;
 		
-		newBubble.textContent = arrD[i];
+		newBubble.textContent = arrD[i];	//Для отладки
 		container.appendChild(newBubble);
 	}
 }
@@ -116,7 +114,7 @@ function sortBubbles () {
 				return;
 			}
 			setTimeout(sortJ, 2000, j);
-		}, 1000, 0)
+		}, 1000, 0);
 		if (!flagWasSwap) {
 			//Не было ни одного обмена за проход
 			//Досрочно выходим из сортировки
@@ -125,8 +123,7 @@ function sortBubbles () {
 		i++;
 		if (i === countBubbles) return;
 		setTimeout(sortI, 2000*countBubbles, i);
-	}, 1000, 0)
-//}
+	}, 1000, 0);
 }
 
 

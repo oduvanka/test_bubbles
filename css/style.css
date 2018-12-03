@@ -19,9 +19,13 @@
 }
 
 .magicWand {
-	width: 100px;
-	height: 100px;
-	background-color: green;
+	/*временный*/
+	width: 150px;
+	height: 20px;
+	padding: 10px;
+	background-color: gold;
+	border-radius: 20px;
+	text-align: center;
 }
 
 .bubble {
@@ -67,33 +71,46 @@
 .bubbleRed {
 	background: #c8171f;
 	background: radial-gradient(circle farthest-corner at 40% 40%, #f9d0be, #c8171f 40%);
+	transform: rotate(5deg);
 }
 .bubbleBlue {
 	background: #00a1ee;
-	background: radial-gradient(circle farthest-corner at 40% 40%, #f9d0be, #00a1ee 40%);
+	background: radial-gradient(circle farthest-corner at 40% 40%, #cde6f9, #00a1ee 40%);
+	transform: rotate(3deg);
 }
 .bubbleYellow {
 	background: #fcb83d;
-	background: radial-gradient(circle farthest-corner at 40% 40%, #f9d0be, #fcb83d 40%);
+	background: radial-gradient(circle farthest-corner at 40% 40%, #fcf3a6, #fcb83d 40%);
+	transform: rotate(-5deg);
 }
 .bubbleGreen {
 	background: #4d8d00;
-	background: radial-gradient(circle farthest-corner at 40% 40%, #f9d0be, #4d8d00 40%);
+	background: radial-gradient(circle farthest-corner at 40% 40%, #d1e5b2, #4d8d00 40%);
+	transform: rotate(-3deg);
 }
 
 .bubbleInFocus {
-	background-color: yellow;
+	box-shadow: 0 0 50px 10px yellow;
 }
 
 .bubbleFalse {
-	background-color: red;
+	box-shadow: 0 0 50px 10px red;
 }
 
-.bubbleDisable {
-	background-color: silver;
-}
 
 /*Анимация*/
+@keyframes moveTop {
+	to {
+		transform: translateY(-50px);
+	}
+}
+
+@keyframes moveBottom {
+	to {
+		transform: translateY(50px);
+	}
+}
+
 
 @keyframes moveTopLeft{
 	50% {
@@ -113,7 +130,19 @@
 	}
 }
 
+.moveBubbleToTop {
+	animation-name: moveTop;
+	animation-duration: 1s;
+}
+.moveBubbleToBottom {
+	animation-name: moveBottom;
+	animation-duration: 1s;
+}
 .moveBubbleToLeft {
 	animation-name: moveTopLeft;
+	animation-duration: 5s;
+}
+.moveBubbleToRight {
+	animation-name: moveBottomRight;
 	animation-duration: 5s;
 }
