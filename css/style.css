@@ -25,12 +25,60 @@
 }
 
 .bubble {
+	position: relative;
 	min-width: 10px;
 	min-height: 10px;
 	margin: 5px;
-	border: 1px solid black;
+	border: 1px solid rgba(0, 0, 0, 0.3);
 	border-radius: 30px;
+	box-shadow: 0 0 5px #777777;
 	text-align: center;
+}
+
+.bubble:before {
+	content: "";
+	height: 10%;
+	width: 20%;
+	position: absolute;
+	left: 50%;
+	top: -12%;
+	margin-left: -10%;
+	background: silver;
+	background: linear-gradient(to right, #fff, #9c9c9c, #fff, #9c9c9c);
+	border: 1px solid #dadada;
+	border-radius: 2px;
+	box-shadow: 0 1px 0 rgba(0,0,0,0.2), 0 -1px 0 rgba(255,255,255,0.3) inset;
+}
+
+.bubble:after {
+	content: "";
+	height: 80%;
+	width: 80%;
+	position: absolute;
+	top: 0;
+	left: 50%;
+	margin-left: -40%;
+	background: #fff;
+	background: linear-gradient(to bottom, #fff, rgba(255,255,255,0.1) );
+	opacity: 0.15;
+	border-radius: 100px;
+}
+
+.bubbleRed {
+	background: #c8171f;
+	background: radial-gradient(circle farthest-corner at 40% 40%, #f9d0be, #c8171f 40%);
+}
+.bubbleBlue {
+	background: #00a1ee;
+	background: radial-gradient(circle farthest-corner at 40% 40%, #f9d0be, #00a1ee 40%);
+}
+.bubbleYellow {
+	background: #fcb83d;
+	background: radial-gradient(circle farthest-corner at 40% 40%, #f9d0be, #fcb83d 40%);
+}
+.bubbleGreen {
+	background: #4d8d00;
+	background: radial-gradient(circle farthest-corner at 40% 40%, #f9d0be, #4d8d00 40%);
 }
 
 .bubbleInFocus {

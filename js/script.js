@@ -34,9 +34,25 @@ function createBubbles () {
 	for (var i = 0; i < countBubbles; i++) {
 		var newBubble = document.createElement("div");
 		newBubble.classList.add('bubble');
-		newBubble.style.width = arrD[i] + 'px';
-		newBubble.style.height = arrD[i] + 'px';
-		newBubble.style.borderRadius = arrD[i] + 'px';
+		
+		/*Цвет шара*/
+		if (i%4 === 0) {
+			newBubble.classList.add('bubbleRed');
+		}
+		else if (i%3 === 0) {
+			newBubble.classList.add('bubbleBlue');
+		}
+		else if (i%2 === 0) {
+			newBubble.classList.add('bubbleYellow');
+		}
+		else {
+			newBubble.classList.add('bubbleGreen');
+		}
+		
+		var bublleOptions = arrD[i] + 'px';
+		newBubble.style.width = bublleOptions;
+		newBubble.style.height = bublleOptions;
+		newBubble.style.borderRadius = bublleOptions;
 		
 		newBubble.textContent = arrD[i];
 		container.appendChild(newBubble);
@@ -45,11 +61,11 @@ function createBubbles () {
 
 function sortBubbles () {
 	var i = 0;
-	var resultSortI = setTimeout(function sortI (i) 
+	var sortI_id = setTimeout(function sortI (i) 
 	{
 		var flagWasSwap = false;
 		var j = 0;
-		var resultSortJ = setTimeout(function sortJ (j) 
+		var sortJ_id = setTimeout(function sortJ (j) 
 		{
 			var bubbles = document.querySelectorAll('.bubble');
 			var bubbleLeft = bubbles[j];
@@ -96,7 +112,7 @@ function sortBubbles () {
 			
 			j++;
 			if (j === countBubbles-i) {
-				//clearTimeout(sortJ);
+				clearTimeout(sortJ_id);
 				return;
 			}
 			setTimeout(sortJ, 2000, j);
@@ -104,7 +120,7 @@ function sortBubbles () {
 		if (!flagWasSwap) {
 			//Не было ни одного обмена за проход
 			//Досрочно выходим из сортировки
-			clearTimeout(sortI);
+			clearTimeout(sortI_id);
 		}
 		i++;
 		if (i === countBubbles) return;
