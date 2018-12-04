@@ -1,40 +1,29 @@
-.body {
-	min-width: 1200px;
+body {
 	margin: 0;
 	padding: 0;
-	font-size: 8px;
-    line-height: 20px;
+	font-size: 12px;
     font-family: "Arial", sans-serif;
     color: #333333;
-	background-color: #ffffff;
+	background-color: #f2f5f6;
 }
 
-.container {
+.contentBubbles {
 	display: flex;
-	margin: 0 auto;
-	padding-top: 100px;
-	min-width: 100px;
-	justify-content: space-between;
-	align-items: flex-end;
-}
-
-.magicWand {
-	/*временный*/
-	width: 150px;
-	height: 20px;
-	padding: 10px;
-	background-color: gold;
-	border-radius: 20px;
-	text-align: center;
+	margin: 0;
+	padding: 0;
+	min-width: 300px;
+	height: 100vh;
+	justify-content: space-around;
+	align-items: center;
 }
 
 .bubble {
 	position: relative;
-	min-width: 10px;
-	min-height: 10px;
-	margin: 5px;
+	min-width: 20px;
+	min-height: 20px;
+	margin: 20px;
 	border: 1px solid rgba(0, 0, 0, 0.3);
-	border-radius: 30px;
+	border-radius: 20px;
 	box-shadow: 0 0 5px #777777;
 	text-align: center;
 }
@@ -95,23 +84,11 @@
 
 .bubbleFalse {
 	box-shadow: 0 0 50px 10px red;
+
 }
 
 
 /*Анимация*/
-@keyframes moveTop {
-	to {
-		transform: translateY(-50px);
-	}
-}
-
-@keyframes moveBottom {
-	to {
-		transform: translateY(50px);
-	}
-}
-
-
 @keyframes moveTopLeft{
 	50% {
 		transform: translate(-50px, -50px);
@@ -130,19 +107,13 @@
 	}
 }
 
-.moveBubbleToTop {
-	animation-name: moveTop;
-	animation-duration: 1s;
-}
-.moveBubbleToBottom {
-	animation-name: moveBottom;
-	animation-duration: 1s;
-}
 .moveBubbleToLeft {
 	animation-name: moveTopLeft;
-	animation-duration: 5s;
+	animation-duration: 1s;
+	animation-fill-mode: forwards;
 }
 .moveBubbleToRight {
 	animation-name: moveBottomRight;
-	animation-duration: 5s;
+	animation-duration: 1s;
+	animation-fill-mode: forwards;
 }

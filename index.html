@@ -6,14 +6,15 @@
 		<link rel="stylesheet" href="css/style.css">
 	</head>
 	<body>
-		<div class="magicWand"></div>
 		<div class="container">
+			<div class="contentBubbles">
+			</div>
 		</div>
 	</body>
 	
 	<script src="js/script.js"></script>
 	<script>
-		document.body.onload = createBubbles;
-		document.querySelector('.magicWand').onclick = sortBubbles;
+		document.body.onload = createBubble(0,0);
+		sortBubbles(0, false, arrD.length-1, 0);
 	</script>
 </html>
