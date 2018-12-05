@@ -76,7 +76,7 @@ function sortBubbles (k = 0, flagWasSwap = false, n = arrD.length-1, startTime =
 	setTimeout(function() 
 	{
 		var bubbles = document.querySelectorAll('.bubble');
-		console.log(i);
+		
 		//ֲûהוכÿול ראנû
 		bubbles[i].classList.add('bubbleInFocus');
 		bubbles[i+1].classList.add('bubbleInFocus');
