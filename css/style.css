@@ -3,9 +3,15 @@ body {
 	padding: 0;
 	font-size: 12px;
     font-family: "Arial", sans-serif;
-    color: #ffffff;
+    color: #333333;
 	line-height: 20px;
 	background-color: #f2f5f6;
+}
+
+.steps {
+	position: absolute;
+	top: 20px;
+	left: 20px;
 }
 
 .contentBubbles {
@@ -26,6 +32,7 @@ body {
 	border: 1px solid rgba(0, 0, 0, 0.3);
 	border-radius: 20px;
 	box-shadow: 0 0 5px #777777;
+	color: #ffffff;
 	text-align: center;
 }
 

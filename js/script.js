@@ -61,7 +61,7 @@ flagWasSwap	- флаг, отмечает что за проход была перестановка, сбрасывается перед
 n			- индекс последнего в проходе элемента, уменьшается на 1 когда завершён проход
 startTime		- таймаут выполнения функций, секунды, переводится в мс и увеличивается перед вызовом setTime
 */
-function sortBubbles (k = 0, flagWasSwap = false, n = arrD.length-1, startTime = 0) {
+function sortBubbles (k = 0, flagWasSwap = false, n = arrD.length-1, startTime = 0, numberOfChecks) {
 	let i = k;
 
 	startTime += 300;
@@ -104,20 +104,26 @@ function sortBubbles (k = 0, flagWasSwap = false, n = arrD.length-1, startTime =
 		}, startTime, i);
 	}
 	
+	numberOfChecks++;
+	let numberOfCheck = numberOfChecks;
 	//Снимаем выделение с шаров
 	startTime += 300;
 	setTimeout(function() 
 	{	
+		let nowStep = document.getElementById('nowStep');
+		nowStep.textContent = numberOfCheck;
+	
 		let bubbles = document.querySelectorAll('.bubble');
 		bubbles[i].classList.remove('bubbleInFocus');
 		bubbles[i+1].classList.remove('bubbleInFocus');
-	}, startTime, i);
+	}, startTime, i, numberOfCheck);
 	
 	k++;
 	
 	if ((k === n) && (!flagWasSwap)) {
 		//Дошли до последнего шара и не было перестановок
 		//Это финал, наряжаем ёлку
+		totalSteps.textContent = numberOfChecks;
 	}
 	else {
 		if (k === n) {
@@ -126,12 +132,9 @@ function sortBubbles (k = 0, flagWasSwap = false, n = arrD.length-1, startTime =
 			n--;
 			flagWasSwap = false;	
 		}
-		sortBubbles(k, flagWasSwap, n, startTime);
+		sortBubbles(k, flagWasSwap, n, startTime, numberOfChecks);
 	}
 }
-
-
-
 
 
 

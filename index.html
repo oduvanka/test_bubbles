@@ -7,6 +7,7 @@
 	</head>
 	<body>
 		<div class="container">
+			<div class="steps">Сделано проверок <span id="nowStep">0</span> из <span id="totalSteps">20</span></div>
 			<div class="contentBubbles">
 			</div>
 		</div>
@@ -15,6 +16,6 @@
 	<script src="js/script.js"></script>
 	<script>
 		document.body.onload = createBubble(0,0);
-		sortBubbles(0, false, arrD.length-1, 0);
+		sortBubbles(0, false, arrD.length-1, 0, 0);
 	</script>
 </html>
