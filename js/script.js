@@ -1,20 +1,19 @@
-let	contentBubbles = document.querySelector('.contentBubbles'),
-	arrD = [];
+let	arrD = [];
 	
 function onLoadPage () {
 	createBubble();
-	//sortBubbles();
+	sortBubbles();
 }
 
 function createBubble (i = 0) {
 	 
-	if (getD(i)) {
+	if (checkFreeSpace(i)) {
 		//Есть свободное место,
 		let newBubble = createObject();
 		
 		editOptionsBubble(newBubble, i);
 		addStyleBubble(newBubble, i);
-		contentBubbles.appendChild(newBubble);
+		appendBubble(newBubble);
 		
 		i++;
 		createBubble(i);
@@ -26,8 +25,9 @@ function createObject () {
 	return  document.createElement("div");
 }
 
-/*Работаем с размером шара*/
-function getD(i) {
+/*Проверим свободное место*/
+function checkFreeSpace(i) {
+	let contentBubbles = document.querySelector('.contentBubbles');
 	const contentWeight = contentBubbles.clientWidth,
 		MIN_D = ((contentWeight > 1000) ? (Math.floor(contentWeight / 30)) : 20),
 		MAX_D = ((contentWeight > 1000) ? (Math.floor(contentWeight / 10)) : 30),
@@ -35,12 +35,12 @@ function getD(i) {
 		
 	let newD = getRandomInt(MIN_D, MAX_D);
 	
-	let sumArrD = getSumArr() + newD + (SPACE_D * (i-1));
+	let sumArrD = getSumArr() + newD + (SPACE_D * (i+1));
 	
 	let flagFreePlace = false;
 	if ((contentWeight - sumArrD) > 0) {
 		//Свободного места осталось столько, что шарик с полученным диаметром поместится
-		arrD[i] = newD;
+		addDtoArr(newD, i);
 		flagFreePlace = true;
 	}
 	return flagFreePlace;
@@ -53,6 +53,8 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
+/*Свёртка массива - сумма всех элементов
+https://learn.javascript.ru/array-iteration */
 function getSumArr () {
 	// для каждого элемента массива запустить функцию,
 	// промежуточный результат передавать первым аргументом далее
@@ -61,6 +63,11 @@ function getSumArr () {
 	}, 0);
 	
 	return result;
+}
+
+/*Добавляем новый диаметр в массив*/
+function addDtoArr (D, i) {
+	arrD[i] = D;
 }
 
 //Задаём размеры div нового шара
@@ -93,98 +100,111 @@ function addStyleBubble (bubble, i) {
 	bubble.classList.add(colorBubble);
 }
 
+/*Вставляем созданный div с шариком на страницу*/
+function appendBubble (bubble) {
+	let contentBubbles = document.querySelector('.contentBubbles');
+	contentBubbles.appendChild(bubble);
+}
+
 /*Меняет местами 2 шара и проверяет, нужны ли ещё перестановки
 Параметры:
-k			- счётчик элементов, увеличивается на 1, обнуляется когда завершён перебор всех элементов (проход)
+i			- счётчик элементов, увеличивается на 1, обнуляется когда завершён перебор всех элементов (проход)
 flagWasSwap	- флаг, отмечает что за проход была перестановка, сбрасывается перед новым проходом
 n			- индекс последнего в проходе элемента, уменьшается на 1 когда завершён проход
-startTime		- таймаут выполнения функций, секунды, переводится в мс и увеличивается перед вызовом setTime
 */
-function sortBubbles (i = 0, flagWasSwap = false, n = arrD.length-1) {
-		
-	let flagWillSwapBubbles = false;
+function sortBubbles (iL = 0, flagWasSwap = false, n = arrD.length-1) {
+	let flagEnd = false;
 	
-	if (arrD[i] > arrD[i+1]) {
-		//Меняем местами диаметры
-		let tempD = arrD[i];
-		arrD[i] = arrD[i+1];
-		arrD[i+1] = tempD;
-		
-		flagWasSwap = true;
-		
-		flagWillSwapBubbles = true;
+	if (iL === n) {
+		//Дошли до последнего шара
+		if (!flagWasSwap) {
+			//Не было перестановок
+			flagEnd = true;
+		}
+		else {
+			//перестановки были, поэтому надо перебирать заново	
+			iL = 0;
+			n--;
+			flagWasSwap = false;
+		}
 	}
 	
-	setTimeout(function(i) 
+	let iR = iL + 1;
+	
+	let flagSwappedBubbles = compareD(iL, iR);	//проверим, нужна ли перестановка
+	if (flagSwappedBubbles) {
+		flagWasSwap = true;	//за этот проход была перестановка
+	}
+	
+	let timeoutMs = 300;
+	
+	setTimeout(function() 
 	{
 		let numberOfChecks = 0;
 		//Новый шаг
+		/*numberOfChecks++;
 		let nowStep = document.getElementById('nowStep');
-		nowStep.textContent = numberOfChecks;
-		
-		let bubbles = contentBubbles.querySelectorAll('.bubble');
-		let bubble1 = bubbles[i];
-		let bubble2 = bubbles[i+1];
-				
-		//Выделяем шары
-		bubble1.classList.add('bubbleInFocus');
-		bubble2.classList.add('bubbleInFocus');
+		nowStep.textContent = numberOfChecks;*/
+					
+		addClass(iL, iR, 'bubbleInFocus'); //Выделяем шары
 		
 		setTimeout(function() 
 		{		
-			if (flagWillSwapBubbles) {
-				//Выделяем неправильные шары
-				bubble1.classList.add('bubbleFalse');
-				bubble2.classList.add('bubbleFalse');
+			if (flagSwappedBubbles) {
+				addClass(iL, iR, 'bubbleFalse'); //Выделяем неправильные шары
 			}
 			
 			setTimeout(function() 
 			{			
-				if (flagWillSwapBubbles) {
-					//Меняем местами шары
-					contentBubbles.removeChild(bubble2);
-					let newPlaceBubble = contentBubbles.insertBefore(bubble2, bubble1);
-					
-					bubble1.classList.remove('bubbleFalse');
-					bubble2.classList.remove('bubbleFalse');
+				if (flagSwappedBubbles) {
+					swappedBubbles(iL, iR); //Меняем местами шары				
+					removeClass(iL, iR, 'bubbleFalse'); //Снимаем выделение с шаров, которые были неправильными
 				}
-							
-				//Снимаем выделение с шаров
-				bubble1.classList.remove('bubbleInFocus');
-				bubble2.classList.remove('bubbleInFocus');
-				numberOfChecks++;
-			}, 300);
-		}, 300);
-	}, 300, i);
-	
-	i++;
-	
-	if (i === n) {
-		//Дошли до последнего шара
-		if (!flagWasSwap) {
-			//Не было перестановок
-			//totalSteps.textContent = numberOfChecks;
-			return;
-		}
-		//перестановки были, поэтому надо перебирать заново	
-		i = 0;
-		n--;
-		flagWasSwap = false;
-	}
-	setTimeout(function(i) 
-	{
-		sortBubbles(i, flagWasSwap, n);
-	}, 1000, i);
+				removeClass(iL, iR, 'bubbleInFocus'); //Снимаем выделение с шаров
+				
+				if (flagEnd) {
+					return;
+				}
+				sortBubbles(iR, flagWasSwap, n);
+			}, timeoutMs);
+		}, timeoutMs);
+	}, timeoutMs);
 }
 
+function compareD (i1, i2) {
+	let flagSwap = false;
+	
+	if (arrD[i1] > arrD[i2]) {
+		//Меняем местами диаметры
+		let tempD = arrD[i1];
+		arrD[i1] = arrD[i2];
+		arrD[i2] = tempD;
+		
+		flagSwap = true;
+	}
+	return flagSwap;
+}
 
-/*
-таймауты вложенные,
-тогда не надо будет только 1 раз получать массив шаров,
-избавиться от лишних счётчиков, не надо будет передавать startTime в функцию,
+function addClass (iFrom, iTo, className) {
+	let contentBubbles = document.querySelector('.contentBubbles');
+	let bubbles = contentBubbles.querySelectorAll('.bubble');
+	for (let i = iFrom; i <= iTo; i++) {
+		bubbles[i].classList.add(className);
+	}
+}
 
-document заменить на content
+function swappedBubbles (iB1, iB2) {
+	let contentBubbles = document.querySelector('.contentBubbles');
+	let bubbles = contentBubbles.querySelectorAll('.bubble');
 
-вынести в отдельные функции создание шариков с размерами и отдельно прикручивание им классов,
-то есть будет стартовая функция, которая будет звать 2 другие функции
-*/
+	contentBubbles.removeChild(bubbles[iB2]);
+	let newPlaceBubble = contentBubbles.insertBefore(bubbles[iB2], bubbles[iB1]);
+}
+
+function removeClass (iFrom, iTo, className) {
+	let contentBubbles = document.querySelector('.contentBubbles');
+	let bubbles = contentBubbles.querySelectorAll('.bubble');
+	for (let i = iFrom; i <= iTo; i++) {
+		bubbles[i].classList.remove(className);
+	}
+}
