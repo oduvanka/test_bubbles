@@ -2,6 +2,7 @@ let	arrD = [];
 	
 function onLoadPage () {
 	createBubble();
+	writeNumber('totalSteps', getMaxNumberSteps());
 	sortBubbles();
 }
 
@@ -106,6 +107,12 @@ function appendBubble (bubble) {
 	contentBubbles.appendChild(bubble);
 }
 
+function getMaxNumberSteps () {
+	let n = arrD.length;
+	return (n-1)*n/2;
+}
+
+
 /*Меняет местами 2 шара и проверяет, нужны ли ещё перестановки
 Параметры:
 i			- счётчик элементов, увеличивается на 1, обнуляется когда завершён перебор всех элементов (проход)
@@ -113,24 +120,9 @@ flagWasSwap	- флаг, отмечает что за проход была перестановка, сбрасывается перед
 n			- индекс последнего в проходе элемента, уменьшается на 1 когда завершён проход
 */
 function sortBubbles (iL = 0, flagWasSwap = false, n = arrD.length-1) {
-	let flagEnd = false;
-	
-	if (iL === n) {
-		//Дошли до последнего шара
-		if (!flagWasSwap) {
-			//Не было перестановок
-			flagEnd = true;
-		}
-		else {
-			//перестановки были, поэтому надо перебирать заново	
-			iL = 0;
-			n--;
-			flagWasSwap = false;
-		}
-	}
 	
 	let iR = iL + 1;
-	
+		
 	let flagSwappedBubbles = compareD(iL, iR);	//проверим, нужна ли перестановка
 	if (flagSwappedBubbles) {
 		flagWasSwap = true;	//за этот проход была перестановка
@@ -138,37 +130,58 @@ function sortBubbles (iL = 0, flagWasSwap = false, n = arrD.length-1) {
 	
 	let timeoutMs = 300;
 	
+	writeNumber('nowStep', getNumberStep(iR, n));	//вычисляем номер шага
+		
+	addClass(iL, iR, 'bubbleInFocus'); //Выделяем шары
+		
 	setTimeout(function() 
-	{
-		let numberOfChecks = 0;
-		//Новый шаг
-		/*numberOfChecks++;
-		let nowStep = document.getElementById('nowStep');
-		nowStep.textContent = numberOfChecks;*/
-					
-		addClass(iL, iR, 'bubbleInFocus'); //Выделяем шары
+	{		
+		if (flagSwappedBubbles) {
+			addClass(iL, iR, 'bubbleFalse'); //Выделяем неправильные шары
+		}
 		
 		setTimeout(function() 
-		{		
+		{			
 			if (flagSwappedBubbles) {
-				addClass(iL, iR, 'bubbleFalse'); //Выделяем неправильные шары
+				swappedBubbles(iL, iR); //Меняем местами шары				
+				removeClass(iL, iR, 'bubbleFalse'); //Снимаем выделение с шаров, которые были неправильными
 			}
+			removeClass(iL, iR, 'bubbleInFocus'); //Снимаем выделение с шаров
 			
-			setTimeout(function() 
-			{			
-				if (flagSwappedBubbles) {
-					swappedBubbles(iL, iR); //Меняем местами шары				
-					removeClass(iL, iR, 'bubbleFalse'); //Снимаем выделение с шаров, которые были неправильными
-				}
-				removeClass(iL, iR, 'bubbleInFocus'); //Снимаем выделение с шаров
-				
-				if (flagEnd) {
+			if (iR === n) {
+				//Дошли до последнего шара
+				addClass(iR, iR, 'moveBubbleUpDown'); //Добавим анимацию для шаров, которые уже не будем перебирать
+				if (!flagWasSwap) {
+					//Не было перестановок
+					alert('Finish!');
 					return;
 				}
-				sortBubbles(iR, flagWasSwap, n);
-			}, timeoutMs);
+				//перестановки были, в этом проходе больше переставлять нечего, переходим на начало шариков
+				iR = 0;
+				n--;
+				flagWasSwap = false;
+			}
+			
+			sortBubbles(iR, flagWasSwap, n);
 		}, timeoutMs);
 	}, timeoutMs);
+}
+
+function getNumberStep (sumSwap, n) {
+/*	arr.length-1 - n - количество завершившихся проходов
+	если 0 = i
+	если 1 = arr.length-1 + i
+	если 2 = arr.length-1 + arr.length-2 + i	*/
+	
+	for (i=0; i<(arrD.length-1-n); i++) {
+		sumSwap += arrD.length-(i+1);
+	}
+	return sumSwap;
+}
+
+function writeNumber (tagName, k) {
+	let tag = document.getElementById(tagName);
+	tag.textContent = k;
 }
 
 function compareD (i1, i2) {

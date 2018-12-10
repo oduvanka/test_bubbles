@@ -89,36 +89,31 @@ body {
 
 .bubbleFalse {
 	box-shadow: 0 0 50px 10px red;
-
 }
 
 
 /*Анимация*/
-@keyframes moveTopLeft{
-	from {
-		transform: rotate(0deg) translateX(0px) rotate(0deg);
+@keyframes moveUpDown{
+	0% {
+		transform: rotate(0deg);
 	}
-	to {
-		transform: rotate(180deg) translateX(100px) rotate(-180deg);
+	25% {
+		transform: rotate(10deg);
+	}
+	50% {
+		transform: rotate(0deg);
+	}
+	75% {
+		transform: rotate(-10deg);
+	}
+	100% {
+		transform: rotate(0deg);
 	}
 }
 
-@keyframes moveBottomRight {
-	from {
-		transform: rotate(0deg) translateX(0px) rotate(0deg);
-	}
-	to {
-		transform: rotate(180deg) translateX(-100px) rotate(-180deg);
-	}
-}
-
-.moveBubbleToLeft {
-	animation-name: moveTopLeft;
-	animation-duration: 1s;
-	animation-fill-mode: forwards;
-}
-.moveBubbleToRight {
-	animation-name: moveBottomRight;
-	animation-duration: 1s;
-	animation-fill-mode: forwards;
+.moveBubbleUpDown {
+	animation-name: moveUpDown; /*название анимации*/
+	animation-duration: 2s; /*длительность*/
+	animation-iteration-count: infinite; /*кол-во повторений - бесконечно*/
+	animation-timing-function: linear; /*форма, график*/
 }
