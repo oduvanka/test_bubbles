@@ -34,6 +34,7 @@ body {
 	box-shadow: 0 0 5px #777777;
 	color: #ffffff;
 	text-align: center;
+	flex-shrink: 0;
 }
 
 .bubble:before {
