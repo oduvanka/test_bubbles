@@ -1,4 +1,5 @@
-let	arrD = [];
+let	arrD = [],
+	newArrD = [];
 	
 function onLoadPage () {
 	createBubble();
@@ -6,13 +7,12 @@ function onLoadPage () {
 	sortBubbles();
 }
 
-function createBubble (i = 0) {
-	 
+function createBubble (i = 0) {	 
 	if (checkFreeSpace(i)) {
 		//Есть свободное место,
 		let newBubble = createObject();
 		
-		editOptionsBubble(newBubble, i);
+		editOptionsBubble(newBubble, arrD[i]);
 		addStyleBubble(newBubble, i);
 		appendBubble(newBubble);
 		
@@ -21,12 +21,16 @@ function createBubble (i = 0) {
 	}
 }
 
-/*Создаём div для будущего шара*/
+/* Клонирует будущий шар из шаблона */
 function createObject () {
-	return  document.createElement("div");
+	let myTemplate = document.querySelector('#tmplBubble').content,
+		tmplBubble = myTemplate.querySelector(".bubble"),
+		clonedBubble = tmplBubble.cloneNode(true);
+		
+	return clonedBubble;
 }
 
-/*Проверим свободное место*/
+/* Проверяет свободное место */
 function checkFreeSpace(i) {
 	let contentBubbles = document.querySelector('.contentBubbles');
 	const contentWeight = contentBubbles.clientWidth,
@@ -40,7 +44,7 @@ function checkFreeSpace(i) {
 	
 	let flagFreePlace = false;
 	if ((contentWeight - sumArrD) > 0) {
-		//Свободного места осталось столько, что шарик с полученным диаметром поместится
+		/* Свободного места осталось столько, что шарик с полученным диаметром поместится */
 		addDtoArr(newD, i);
 		flagFreePlace = true;
 	}
@@ -54,7 +58,7 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
-/*Свёртка массива - сумма всех элементов
+/* Сворачивает массив, суммируя все элементы
 https://learn.javascript.ru/array-iteration */
 function getSumArr () {
 	// для каждого элемента массива запустить функцию,
@@ -66,26 +70,22 @@ function getSumArr () {
 	return result;
 }
 
-/*Добавляем новый диаметр в массив*/
+/* Добавляет новый диаметр в массив */
 function addDtoArr (D, i) {
 	arrD[i] = D;
+	newArrD[i] = D;
 }
 
-//Задаём размеры div нового шара
-function editOptionsBubble (bubble, i) {
-	let bublleOptions =  arrD[i] + 'px';
-	bubble.style.width = bublleOptions;
-	bubble.style.height = bublleOptions;
-	bubble.style.borderRadius = bublleOptions;
+/* Задаёт размеры нового шара */
+function editOptionsBubble (bubble, myNumber) {
+	bubble.style.width = myNumber + 'px';
+	bubble.style.height = myNumber + 'px';
 	
-	bubble.textContent = arrD[i];	//Для отладки выводим число на шаре
+	bubble.textContent = myNumber;
 }
 
-/*Добавляем классы для визуализации div нового шара*/
-function addStyleBubble (bubble, i) {
-	bubble.classList.add('bubble');
-	
-	/*Цвет шара*/
+/*Добавляет класс цвета шара*/
+function addStyleBubble (bubble, i) {	
 	let colorBubble = 'bubbleYellow';
 	switch (i%4) {
 		case 0: 
@@ -101,17 +101,17 @@ function addStyleBubble (bubble, i) {
 	bubble.classList.add(colorBubble);
 }
 
-/*Вставляем созданный div с шариком на страницу*/
+/* Вставляет новый шарик на страницу*/
 function appendBubble (bubble) {
 	let contentBubbles = document.querySelector('.contentBubbles');
 	contentBubbles.appendChild(bubble);
 }
 
+/* Вычисляет и возвращает максимально возможное количество перестановок */
 function getMaxNumberSteps () {
 	let n = arrD.length;
 	return (n-1)*n/2;
 }
-
 
 /*Меняет местами 2 шара и проверяет, нужны ли ещё перестановки
 Параметры:
@@ -119,7 +119,7 @@ i			- счётчик элементов, увеличивается на 1, обнуляется когда завершён перебор в
 flagWasSwap	- флаг, отмечает что за проход была перестановка, сбрасывается перед новым проходом
 n			- индекс последнего в проходе элемента, уменьшается на 1 когда завершён проход
 */
-function sortBubbles (iL = 0, flagWasSwap = false, n = arrD.length-1) {
+function sortBubbles (iL = 0, flagWasSwap = false, n = newArrD.length-1) {
 	
 	let iR = iL + 1;
 		
@@ -167,36 +167,47 @@ function sortBubbles (iL = 0, flagWasSwap = false, n = arrD.length-1) {
 	}, timeoutMs);
 }
 
+/* Вычисляет количество перестановок,
+sumSwap - всего состоялось перестановок,
+n - всего может быть перестановок,
+возвращает число */
 function getNumberStep (sumSwap, n) {
 /*	arr.length-1 - n - количество завершившихся проходов
 	если 0 = i
 	если 1 = arr.length-1 + i
-	если 2 = arr.length-1 + arr.length-2 + i	*/
+	если 2 = arr.length-1 + arr.length-2 + i */
 	
-	for (i=0; i<(arrD.length-1-n); i++) {
-		sumSwap += arrD.length-(i+1);
+	for (i=0; i<(newArrD.length-1-n); i++) {
+		sumSwap += newArrD.length-(i+1);
 	}
+	
 	return sumSwap;
 }
 
+/* Устанавливает значения перестановок */
 function writeNumber (tagName, k) {
 	let tag = document.getElementById(tagName);
 	tag.textContent = k;
 }
 
+/* Меняет местами диаметры в массиве диаметров,
+i1, i2 - индексы элементов массива диаметров,
+возвращает истину, если перестановка состоялась */
 function compareD (i1, i2) {
 	let flagSwap = false;
 	
-	if (arrD[i1] > arrD[i2]) {
-		//Меняем местами диаметры
-		let tempD = arrD[i1];
-		arrD[i1] = arrD[i2];
-		arrD[i2] = tempD;
+	if (newArrD[i1] > newArrD[i2]) {
+		let tempD = newArrD[i1];
+		newArrD[i1] = newArrD[i2];
+		newArrD[i2] = tempD;
 		
 		flagSwap = true;
 	}
+	
 	return flagSwap;
 }
+
+/* Управление подсветкой шаров */
 
 function addClass (iFrom, iTo, className) {
 	let contentBubbles = document.querySelector('.contentBubbles');
