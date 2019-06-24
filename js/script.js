@@ -3,7 +3,9 @@ let	arrD = [],
 	
 function onLoadPage () {
 	createBubble();
+	
 	writeNumber('totalSteps', getMaxNumberSteps());
+	
 	sortBubbles();
 }
 
@@ -36,7 +38,7 @@ function checkFreeSpace(i) {
 	const contentWeight = contentBubbles.clientWidth,
 		MIN_D = ((contentWeight > 1000) ? (Math.floor(contentWeight / 30)) : 20),
 		MAX_D = ((contentWeight > 1000) ? (Math.floor(contentWeight / 10)) : 30),
-		SPACE_D = 40;
+		SPACE_D = 50;
 		
 	let newD = getRandomInt(MIN_D, MAX_D);
 	
@@ -48,6 +50,7 @@ function checkFreeSpace(i) {
 		addDtoArr(newD, i);
 		flagFreePlace = true;
 	}
+	
 	return flagFreePlace;
 }
 
@@ -110,6 +113,7 @@ function appendBubble (bubble) {
 /* ¬ычисл€ет и возвращает максимально возможное количество перестановок */
 function getMaxNumberSteps () {
 	let n = arrD.length;
+	
 	return (n-1)*n/2;
 }
 
@@ -120,20 +124,19 @@ flagWasSwap	- флаг, отмечает что за проход была перестановка, сбрасываетс€ перед
 n			- индекс последнего в проходе элемента, уменьшаетс€ на 1 когда завершЄн проход
 */
 function sortBubbles (iL = 0, flagWasSwap = false, n = newArrD.length-1) {
+	const TIMEOUT_MS = 300;
 	
 	let iR = iL + 1;
-		
+	
 	let flagSwappedBubbles = compareD(iL, iR);	//проверим, нужна ли перестановка
 	if (flagSwappedBubbles) {
 		flagWasSwap = true;	//за этот проход была перестановка
-	}
+	}	
 	
-	let timeoutMs = 300;
+	writeNumber('nowStep', getNumberStep(iR, n));	//вычисл€ем номер шага				
 	
-	writeNumber('nowStep', getNumberStep(iR, n));	//вычисл€ем номер шага
-		
 	addClass(iL, iR, 'bubbleInFocus'); //¬ыдел€ем шары
-		
+	
 	setTimeout(function() 
 	{		
 		if (flagSwappedBubbles) {
@@ -151,11 +154,14 @@ function sortBubbles (iL = 0, flagWasSwap = false, n = newArrD.length-1) {
 			if (iR === n) {
 				//ƒошли до последнего шара
 				addClass(iR, iR, 'moveBubbleUpDown'); //ƒобавим анимацию дл€ шаров, которые уже не будем перебирать
-				if (!flagWasSwap) {
+				
+				if (!flagWasSwap || n===1) {
 					//Ќе было перестановок
-					alert('Finish!');
+					
 					return;
+					alert('Finish!');
 				}
+				
 				//перестановки были, в этом проходе больше переставл€ть нечего, переходим на начало шариков
 				iR = 0;
 				n--;
@@ -163,8 +169,8 @@ function sortBubbles (iL = 0, flagWasSwap = false, n = newArrD.length-1) {
 			}
 			
 			sortBubbles(iR, flagWasSwap, n);
-		}, timeoutMs);
-	}, timeoutMs);
+		}, TIMEOUT_MS);
+	}, TIMEOUT_MS);
 }
 
 /* ¬ычисл€ет количество перестановок,
